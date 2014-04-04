@@ -1,0 +1,14 @@
+server {
+  listen   <%= @params[:port] %><%= @params[:default_server] ? node['nginx']['version'] >= '0.8.21' ? ' default_server' : ' default' : '' %>;
+  server_name <%= @params[:server_name].nil? ? node['hostname'] : @params[:server_name] %>;
+
+  access_log <%= node['nginx']['log_dir'] %>/<%= @params[:name] %>-access.log;
+  error_log  <%= node['nginx']['log_dir'] %>/<%= @params[:name] %>-error.log;
+
+  location / {
+    proxy_pass              http://localhost:<%= node['sonarqube']['reverse_proxy_port'] %>/;
+    proxy_set_header        X-Real-IP   $remote_addr;
+    proxy_set_header        Host        $host;
+    proxy_set_header        X-Forwarded-Proto http;
+  }
+}
