@@ -19,7 +19,14 @@
 
 include_recipe 'nginx'
 
+template ::File.join(node['nginx']['dir'], 'sites-available', 'sonarqube') do
+  source node['sonarqube']['nginx_template']
+  mode 0644
+  owner 'root'
+  group 'root'
+  action :create
+end
+
 nginx_site 'sonarqube' do
-  template node['sonarqube']['nginx_template']
   default_server true
 end

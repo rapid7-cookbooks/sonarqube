@@ -22,4 +22,6 @@
 include_recipe 'postgresql::server'
 include_recipe 'database::postgresql'
 
-node.set_unless['sonarqube']['jdbc']['password'] = secure_password
+if node['sonarqube']['jdbc']['password'].nil?
+  node.set['sonarqube']['jdbc']['password'] = secure_password
+end
