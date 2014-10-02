@@ -1,4 +1,4 @@
-default['sonarqube']['version'] = '4.2'
+default['sonarqube']['version'] = '4.5'
 default['sonarqube']['apt']['repo'] = 'http://downloads.sourceforge.net/project/sonar-pkg/deb'
 default['sonarqube']['apt']['components'] = ['binary/']
 default['sonarqube']['path'] = '/opt/sonar'
