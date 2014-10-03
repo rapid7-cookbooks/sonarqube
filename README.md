@@ -197,8 +197,7 @@ Installs Oracle JDK
 
 #### nginx
 If `node[sonarqube][use_nginx]` is set to `true` this recipe will be included
-in the run_list and configure nginx as a reverse proxy for SonarQube. This recipe
-currently does not support SSL/TLS configuration, but will in the near future.
+in the run_list and configure nginx as a reverse proxy for SonarQube.
 
 #### postgresql
 Installs postgresql and if `node['sonarqube']['jdbc']['password'] is not set it
