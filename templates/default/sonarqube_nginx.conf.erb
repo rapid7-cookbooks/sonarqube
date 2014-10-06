@@ -1,11 +1,39 @@
+# THIS FILE IS MANAGED BY CHEF
+# Local modifications will be discarded.
+
+<% if @redirect_http %>
 server {
-  listen  80 default;
-  server_name <%= node['fqdn'] %>;
+  listen       <%= @listen_port %>;
+  server_name  <%= @host_name %> <%= @host_aliases.join(' ') %>;
+  rewrite      ^(.*) https://$host$1 permanent;
+}
+<% end -%>
+
+server {
+<% if @ssl_enabled -%>
+  listen      <%= @ssl_listen_port %>;
+<% else -%>
+  listen      <%= @listen_port %>;
+<% end -%>
+
+  server_name <%= @host_name %> <%= @host_aliases.join(' ') %>;
+
+<% if @ssl_enabled -%>
+  ssl on;
+  ssl_certificate     /etc/ssl/certs/<%= @host_name %>.crt;
+  ssl_certificate_key /etc/ssl/private/<%= @host_name %>.key;
+
+  ssl_ciphers               EECDH+AES128:RSA+AES128:EECDH+AES256:RSA+AES256:EECDH+3DES:RSA+3DES:!MD5;
+  ssl_prefer_server_ciphers on;
+
+  ssl_session_cache   shared:SSL:10m;
+  ssl_session_timeout 10m;
+<% end -%>
 
   location / {
-    proxy_pass              http://localhost:<%= node['sonarqube']['reverse_proxy_port'] %>/;
+    proxy_pass              http://localhost:<%= @reverse_proxy_port %>/;
     proxy_set_header        X-Real-IP   $remote_addr;
     proxy_set_header        Host        $host;
-    proxy_set_header        X-Forwarded-Proto http;
+    proxy_set_header        X-Forwarded-Proto $scheme;
   }
 }
