@@ -11,3 +11,5 @@ default['sonarqube']['http']['ssl']['port'] = 443
 default['sonarqube']['http']['ssl']['enabled'] = false
 default['sonarqube']['http']['ssl']['cert_databag'] = 'sonarqube'
 default['sonarqube']['http']['ssl']['cert_databag_item'] = 'ssl_cert'
+default['sonarqube']['http']['ssl']['cert_owner'] = 'root'
+default['sonarqube']['http']['ssl']['cert_group'] = 'ssl-cert'

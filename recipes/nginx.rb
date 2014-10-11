@@ -36,9 +36,9 @@ if node['sonarqube']['http']['ssl']['enabled']
 
   # Private key.
   file "/etc/ssl/private/#{node['sonarqube']['http']['host_name']}.key" do
-    mode 0600
-    user 'root'
-    group 'root'
+    mode 0640
+    user node['sonarqube']['http']['ssl']['cert_owner']
+    group node['sonarqube']['http']['ssl']['cert_group']
     content "#{ssl_data_bag['key']}"
     notifies :reload, 'service[nginx]', :delayed
   end
