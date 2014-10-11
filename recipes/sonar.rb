@@ -24,6 +24,14 @@ apt_repository 'sonarqube' do
   trusted     true
 end
 
+# SonarQube's apt repository only keeps the latest version available.
+# To ensure we do not upgrade to a newer version without explicitly telling
+# Chef the version we want, (eg: dist-upgrade) we pin the version.
+apt_preference 'sonar' do
+  pin "version #{node['sonarqube']['version']}"
+  pin_priority '700'
+end
+
 package 'sonar' do
   version node['sonarqube']['version']
 end
