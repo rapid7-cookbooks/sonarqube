@@ -16,25 +16,26 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-require 'uri'
 
 archive_name = "#{node['sonarqube']['runner']['base_filename']}-#{node['sonarqube']['runner']['version']}.#{node['sonarqube']['runner']['archive_type']}"
-download_uri = ::URI.join(node['sonarqube']['runner']['base_uri'], node['sonarqube']['runner']['version'], archive_name)
-
-remote_file ::File.join(Chef::Config['file_cache_path'], archive_name) do
-  source download_uri.to_s
-  checksum node['sonarqube']['runner']['checksum']
-  notifies :run, 'execute[unzip-runner]', :immediately
-end
+download_uri = "#{node['sonarqube']['runner']['base_uri']}/#{node['sonarqube']['runner']['version']}/#{archive_name}"
 
 package 'unzip'
+
+remote_file ::File.join(Chef::Config['file_cache_path'], archive_name) do
+  source download_uri
+  checksum node['sonarqube']['runner']['checksum']
+  notifies :install, 'package[unzip]', :immediately
+  notifies :run, 'execute[unzip-runner]', :immediately
+end
 
 execute 'unzip-runner' do
   command "unzip -o #{::File.join(Chef::Config['file_cache_path'], archive_name)} -d #{node['sonarqube']['path']}"
   action :nothing
 end
 
-template ::File.join(node['sonarqube']['path'], "sonar-runner-#{node['sonarqube']['runner']['version']}", 'conf') do
+template ::File.join(node['sonarqube']['path'], "sonar-runner-#{node['sonarqube']['runner']['version']}", 'conf', 'sonar-runner.properties') do
+  source 'sonar-runner.properties.erb'
   owner node['sonarqube']['system']['user']
   group node['sonarqube']['system']['group']
   mode 0640

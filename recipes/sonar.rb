@@ -17,7 +17,6 @@
 # limitations under the License.
 #
 
-require 'uri'
 
 pkg_name = "sonar_#{node['sonarqube']['version']}_all.deb"
 
@@ -33,7 +32,7 @@ apt_preference 'sonar' do
 end
 
 remote_file ::File.join(Chef::Config[:file_cache_path], pkg_name) do
-  source URI.join(node['sonarqube']['pkg']['uri'], pkg_name).to_s
+  source "#{node['sonarqube']['pkg']['uri']}/#{pkg_name}"
   checksum node['sonarqube']['pkg']['checksum']
 end
 
