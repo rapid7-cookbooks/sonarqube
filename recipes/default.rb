@@ -19,8 +19,10 @@
 
 include_recipe 'apt::default'
 include_recipe 'sonarqube::java'
-include_recipe 'sonarqube::database'
-include_recipe 'sonarqube::sonar'
+# If SSL is enabled, we want to ensure the keys are dropped before the
+# database recipe is called to ensure postgresql can use the cert/key.
 if node['sonarqube']['use_nginx']
   include_recipe 'sonarqube::nginx'
 end
+include_recipe 'sonarqube::database'
+include_recipe 'sonarqube::sonar'

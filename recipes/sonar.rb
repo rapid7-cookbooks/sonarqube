@@ -17,23 +17,28 @@
 # limitations under the License.
 #
 
+require 'uri'
+
+pkg_name = "sonar_#{node['sonarqube']['version']}_all.deb"
+
+# The use of the apt_repository is deprecated. This is here to ensure
+# we gracefully clean up after ourselves when an older version of the 
+# cookbook was originally in use.
 apt_repository 'sonarqube' do
-  uri         node['sonarqube']['apt']['repo']
-  components  node['sonarqube']['apt']['components']
-  deb_src     false
-  trusted     true
+  action :remove
 end
 
-# SonarQube's apt repository only keeps the latest version available.
-# To ensure we do not upgrade to a newer version without explicitly telling
-# Chef the version we want, (eg: dist-upgrade) we pin the version.
 apt_preference 'sonar' do
-  pin "version #{node['sonarqube']['version']}"
-  pin_priority '700'
+  action :remove
 end
 
-package 'sonar' do
-  version node['sonarqube']['version']
+remote_file ::File.join(Chef::Config[:file_cache_path], pkg_name) do
+  source URI.join(node['sonarqube']['pkg']['uri'], pkg_name).to_s
+  checksum node['sonarqube']['pkg']['checksum']
+end
+
+dpkg_package 'sonar' do
+  source ::File.join(Chef::Config[:file_cache_path], pkg_name)
 end
 
 template ::File.join(node['sonarqube']['path'], 'conf', 'sonar.properties') do

@@ -17,5 +17,13 @@
 # limitations under the License.
 #
 
+# Two java installations?! The upstream deb depends on 'java2-runtime'
+# which is a virtual package. As such gdebi and others are unable to
+# resolve the dependency. The better solution will be to do another
+# refactor and just use the tarball.
+if node['java']['install_flavor'] == 'oracle'
+  include_recipe 'java::openjdk'
+end
+
 include_recipe 'java::default'
 
