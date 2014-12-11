@@ -57,6 +57,7 @@ describe 'sonarqube::runner' do
       group: chef_run.node['sonarqube']['system']['group'],
       mode: 0640
     )
-#    expect(chef_run).to render_file(template_file).with_content(/^sonar.host.url=http:\/\/localhost:9000$/)
+    expect(chef_run).to render_file(template_file).with_content(/^sonar.host.url=http:\/\/localhost:#{chef_run.node['sonarqube']['reverse_proxy_port']}$/)
+    expect(chef_run).to render_file(template_file).with_content(/^sonar.jdbc.username=#{chef_run.node['sonarqube']['jdbc']['username']}$/)
   end
 end

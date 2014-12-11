@@ -40,7 +40,7 @@ template ::File.join(node['sonarqube']['path'], "sonar-runner-#{node['sonarqube'
   group node['sonarqube']['system']['group']
   mode 0640
   variables ({
-    :host_url   => "#{node['sonarqube']['http']['url']}:#{node['sonarqube']['http']['port']}",
+    :host_url   => "#{node['sonarqube']['http']['url']}:#{node['sonarqube']['reverse_proxy_port']}",
     :jdbc_url   => node['sonarqube']['jdbc']['url'],
     :jdbc_user  => node['sonarqube']['jdbc']['username'],
     :jdbc_pass  => node['sonarqube']['jdbc']['password']
