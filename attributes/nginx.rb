@@ -1,5 +1,5 @@
-override['nginx']['default_site_enabled'] = false
-override['nginx']['client_max_body_size'] = 0
+default['nginx']['default_site_enabled'] = false
+default['nginx']['client_max_body_size'] = 0
 
 default['sonarqube']['nginx_template'] = 'sonarqube_nginx.conf.erb'
 default['sonarqube']['reverse_proxy_port'] = 9000
