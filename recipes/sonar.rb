@@ -17,18 +17,22 @@
 # limitations under the License.
 #
 
-
-pkg_name = "sonar_#{node['sonarqube']['version']}_all.deb"
-
 # The use of the apt_repository is deprecated. This is here to ensure
 # we gracefully clean up after ourselves when an older version of the 
 # cookbook was originally in use.
-apt_repository 'sonarqube' do
-  action :remove
-end
+case node['platform_family']
+when 'debian'
+  pkg_name = "sonar_#{node['sonarqube']['version']}_all.deb"
 
-apt_preference 'sonar' do
-  action :remove
+  apt_repository 'sonarqube' do
+    action :remove
+  end
+
+  apt_preference 'sonar' do
+    action :remove
+  end
+when 'rhel'
+  pkg_name = "sonar-#{node['sonarqube']['version']}-1.noarch.rpm"
 end
 
 remote_file ::File.join(Chef::Config[:file_cache_path], pkg_name) do
@@ -36,7 +40,8 @@ remote_file ::File.join(Chef::Config[:file_cache_path], pkg_name) do
   checksum node['sonarqube']['pkg']['checksum']
 end
 
-dpkg_package 'sonar' do
+
+package 'sonar' do
   source ::File.join(Chef::Config[:file_cache_path], pkg_name)
 end
 
