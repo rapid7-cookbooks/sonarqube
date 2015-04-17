@@ -23,7 +23,6 @@
 case node['platform_family']
 when 'debian'
   pkg_name = "sonar_#{node['sonarqube']['version']}_all.deb"
-  node.default['sonarqube']['pkg']['uri'] = node['sonarqube']['deb']['uri']
 
   apt_repository 'sonarqube' do
     action :remove
@@ -33,8 +32,7 @@ when 'debian'
     action :remove
   end
 when 'rhel'
-  pkg_name = "sonar-#{node['sonarqube']['version']}.noarch.rpm"
-  node.default['sonarqube']['pkg']['uri'] = node['sonarqube']['rpm']['uri']
+  pkg_name = "sonar-#{node['sonarqube']['version']}-1.noarch.rpm"
 end
 
 remote_file ::File.join(Chef::Config[:file_cache_path], pkg_name) do
